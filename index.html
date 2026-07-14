@@ -171,20 +171,25 @@
 </head>
 <body>
 
-  <div class="card">
-    <div class="chip-icon">🔌</div>
-    <h1>NGHỊCH LÀ GHIỀN</h1>
-    <p class="subtitle">Nạp firmware trực tiếp qua trình duyệt — không cần cài phần mềm</p>
-
-    <div class="badge"><span class="dot"></span> Sẵn sàng kết nối</div>
+  <div class="badge"><span class="dot"></span> Sẵn sàng kết nối</div>
 
     <ul class="steps">
       <li data-num="1">Cắm ESP8266 D1 Mini vào máy tính qua cáp USB</li>
       <li data-num="2">Dùng trình duyệt Chrome, Edge hoặc Cốc Cốc</li>
-      <li data-num="3">Bấm nút bên dưới và chọn đúng cổng COM</li>
+      <li data-num="3">Chọn firmware và bấm nút, chọn đúng cổng COM</li>
     </ul>
 
-    <esp-web-install-button manifest="manifest.json">
+    <div style="margin-bottom: 16px; text-align: left;">
+      <label for="fw-select" style="display:block; font-size:13px; color:#b0b8c1; margin-bottom:6px;">
+        Chọn firmware:
+      </label>
+      <select id="fw-select" style="width:100%; padding:10px; border-radius:8px; background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.15); font-size:14px;">
+        <option value="manifest.json">LED Firmware v1</option>
+        <option value="manifest-v2.json">LED Firmware v2</option>
+      </select>
+    </div>
+
+    <esp-web-install-button id="install-btn" manifest="manifest.json">
       <button slot="activate">⚡ Kết nối &amp; Nạp Firmware</button>
       <span slot="unsupported">⚠️ Trình duyệt không hỗ trợ Web Serial. Vui lòng dùng Chrome hoặc Edge.</span>
       <span slot="not-allowed">⚠️ Trang này cần chạy qua HTTPS để hoạt động.</span>
