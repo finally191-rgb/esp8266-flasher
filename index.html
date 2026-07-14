@@ -167,6 +167,30 @@
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
     }
+
+    .fw-label {
+      display: block;
+      font-size: 13px;
+      color: #b0b8c1;
+      margin-bottom: 6px;
+      text-align: left;
+    }
+
+    .fw-select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .fw-select option {
+      background: #1a2f38;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
@@ -184,15 +208,11 @@
       <li data-num="3">Chọn firmware và bấm nút, chọn đúng cổng COM</li>
     </ul>
 
-    <div style="margin-bottom: 16px; text-align: left;">
-      <label for="fw-select" style="display:block; font-size:13px; color:#b0b8c1; margin-bottom:6px;">
-        Chọn firmware:
-      </label>
-      <select id="fw-select" style="width:100%; padding:10px; border-radius:8px; background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.15); font-size:14px;">
-        <option value="manifest.json">LED Firmware v1</option>
-        <option value="manifest-v2.json">LED Firmware v2</option>
-      </select>
-    </div>
+    <label for="fw-select" class="fw-label">Chọn firmware:</label>
+    <select id="fw-select" class="fw-select">
+      <option value="manifest.json">LED Firmware v1</option>
+      <option value="manifest-v2.json">LED Firmware v2</option>
+    </select>
 
     <esp-web-install-button id="install-btn" manifest="manifest.json">
       <button slot="activate">⚡ Kết nối &amp; Nạp Firmware</button>
