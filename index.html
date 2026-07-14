@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Nạp firmware ESP8266 D1 Mini</title>
+  <script type="module" src="https://unpkg.com/esp-web-tools@9/dist/web/install-button.js?module"></script>
+</head>
+<body style="font-family: sans-serif; text-align:center; margin-top:50px;">
+  <h1>Nạp firmware cho ESP8266 D1 Mini</h1>
+  <p>Cắm D1 Mini vào USB rồi bấm nút bên dưới.</p>
+  <esp-web-install-button manifest="manifest.json">
+    <button slot="activate">Kết nối & Nạp firmware</button>
+    <span slot="unsupported">Trình duyệt không hỗ trợ. Dùng Chrome/Edge.</span>
+    <span slot="not-allowed">Trang cần chạy qua HTTPS.</span>
+  </esp-web-install-button>
+</body>
+</html>
