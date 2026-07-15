@@ -210,9 +210,10 @@
 
     <label for="fw-select" class="fw-label">Chọn firmware:</label>
     <select id="fw-select" class="fw-select">
-      <option value="manifest.json">LED nhấp nháy</option>
-      <option value="manifest-v2.json">điều khiển bldc</option>
-    </select>
+  <option value="manifest.json">LED nhấp nháy (ESP8266)</option>
+  <option value="manifest-v2.json">Điều khiển BLDC (ESP8266)</option>
+  <option value="manifest-esp32.json">fw (ESP32)</option>
+</select>
 
     <esp-web-install-button id="install-btn" manifest="manifest.json">
       <button slot="activate">⚡ Kết nối &amp; Nạp Firmware</button>
