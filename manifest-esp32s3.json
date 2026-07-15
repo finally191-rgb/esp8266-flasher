@@ -1,0 +1,12 @@
+{
+  "name": "ESP32-S3 - LED nhấp nháy",
+  "version": "1.0.0",
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        { "path": "esp32_led.bin", "offset": 0 }
+      ]
+    }
+  ]
+}
