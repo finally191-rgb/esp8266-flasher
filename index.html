@@ -55,7 +55,6 @@
       line-height: 1.6;
     }
 
-    /* Bộ chọn loại chip */
     .chip-selector {
       display: flex;
       gap: 10px;
@@ -182,7 +181,6 @@
     <h1>NGHỊCH LÀ GHIỀN</h1>
     <p class="subtitle">Chọn loại chip, chọn firmware rồi nạp trực tiếp qua trình duyệt</p>
 
-    <!-- Bước 1: chọn loại chip -->
     <div class="chip-selector">
       <button class="chip-option active" data-chip="esp8266">ESP8266</button>
       <button class="chip-option" data-chip="esp32s3">ESP32-S3</button>
@@ -194,7 +192,6 @@
       <li data-num="3">Chọn firmware, bấm nút, chọn đúng cổng COM</li>
     </ul>
 
-    <!-- Bước 2: chọn firmware (danh sách sẽ đổi theo chip) -->
     <label for="fw-select" class="fw-label">Chọn firmware:</label>
     <select id="fw-select" class="fw-select"></select>
 
@@ -208,14 +205,14 @@
   </div>
 
   <script>
-    // Danh sách firmware theo từng loại chip
     const firmwareList = {
       esp8266: [
         { value: "manifest.json", label: "LED nhấp nháy (ESP8266)" },
         { value: "manifest-v2.json", label: "Điều khiển BLDC (ESP8266)" }
       ],
       esp32s3: [
-        { value: "manifest-esp32s3.json", label: "Firmware ESP32-S3" }
+        { value: "manifest-esp32s3.json", label: "Firmware ESP32-S3" },
+        { value: "manifest-esp32s3-led.json", label: "ESP32-S3 LED" }
       ]
     };
 
@@ -231,7 +228,6 @@
         opt.textContent = fw.label;
         fwSelect.appendChild(opt);
       });
-      // Cập nhật manifest theo firmware đầu tiên của chip vừa chọn
       installBtn.setAttribute('manifest', fwSelect.value);
     }
 
@@ -247,7 +243,6 @@
       installBtn.setAttribute('manifest', fwSelect.value);
     });
 
-    // Hiển thị mặc định ban đầu: ESP8266
     renderFwOptions('esp8266');
   </script>
 
