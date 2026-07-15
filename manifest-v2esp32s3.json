@@ -1,1 +1,13 @@
 
+{
+  "name": "ESP32-S3 led ",
+  "version": "1.0.0",
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        { "path": "led.ino.merged.bin", "offset": 0 }
+      ]
+    }
+  ]
+}
