@@ -1,199 +1,347 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nạp Firmware ESP</title>
-  <script type="module" src="https://unpkg.com/esp-web-tools@9/dist/web/install-button.js?module"></script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESP Firmware Flasher</title>
+<script type="module" src="https://unpkg.com/esp-web-tools@9/dist/web/install-button.js?module"></script>
+<style>
+  :root {
+    --bg-dark: #0b1120;
+    --bg-panel: #131b2e;
+    --bg-card: #1a2438;
+    --border-color: rgba(255,255,255,0.08);
+    --accent-1: #00c9ff;
+    --accent-2: #7c5cff;
+    --text-main: #e8ecf3;
+    --text-dim: #8b95a7;
+    --radius: 14px;
+  }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .card {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 40px 30px;
-      max-width: 480px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-      color: #fff;
-    }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
 
-    .chip-icon {
-      width: 70px; height: 70px;
-      margin: 0 auto 20px;
-      background: linear-gradient(135deg, #00c9ff, #92fe9d);
-      border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 34px;
-    }
+  .layout {
+    display: grid;
+    grid-template-columns: 320px 480px;
+    gap: 24px;
+    max-width: 860px;
+    width: 100%;
+  }
 
-    h1 {
-      font-size: 22px;
-      margin-bottom: 10px;
-      background: linear-gradient(135deg, #00c9ff, #92fe9d);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+  }
 
-    .subtitle {
-      color: #b0b8c1;
-      font-size: 14px;
-      margin-bottom: 26px;
-      line-height: 1.6;
-    }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
 
-    .chip-selector {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 22px;
-      background: rgba(255,255,255,0.03);
-      padding: 6px;
-      border-radius: 12px;
-    }
+  .brand-icon {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
 
-    .chip-option {
-      flex: 1;
-      padding: 12px 8px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-      color: #b0b8c1;
-      background: transparent;
-      border: none;
-      transition: all 0.2s ease;
-    }
+  .brand-name {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
 
-    .chip-option.active {
-      background: linear-gradient(135deg, #00c9ff, #92fe9d);
-      color: #0f2027;
-    }
+  .brand-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
 
-    .steps {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 12px;
-      padding: 18px 20px;
-      margin-bottom: 22px;
-      text-align: left;
-    }
+  .sidebar h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
 
-    .steps li {
-      list-style: none;
-      font-size: 13px;
-      color: #d0d6dc;
-      margin-bottom: 10px;
-      padding-left: 26px;
-      position: relative;
-    }
+  .req-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
 
-    .steps li:last-child { margin-bottom: 0; }
+  .req-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-main);
+    line-height: 1.5;
+  }
 
-    .steps li::before {
-      content: attr(data-num);
-      position: absolute; left: 0; top: -1px;
-      width: 18px; height: 18px;
-      background: #00c9ff;
-      color: #0f2027;
-      border-radius: 50%;
-      font-size: 11px; font-weight: bold;
-      display: flex; align-items: center; justify-content: center;
-    }
+  .req-icon {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: rgba(0, 201, 255, 0.12);
+    color: var(--accent-1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
 
-    .fw-label {
-      display: block;
-      font-size: 13px;
-      color: #b0b8c1;
-      margin-bottom: 6px;
-      text-align: left;
-    }
+  .divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 8px 0 20px;
+  }
 
-    .fw-select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
+  .status-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: auto;
+  }
 
-    .fw-select option {
-      background: #1a2f38;
-      color: #fff;
-    }
+  .status-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
 
-    esp-web-install-button { display: block; }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 8px #4ade80;
+  }
 
-    button[slot="activate"] {
-      width: 100%;
-      padding: 16px;
-      font-size: 16px;
-      font-weight: 600;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      background: linear-gradient(135deg, #00c9ff, #92fe9d);
-      color: #0f2027;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+  /* ---------- Main panel ---------- */
+  .panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 36px 36px 32px;
+  }
 
-    button[slot="activate"]:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 201, 255, 0.4);
-    }
+  .panel-header {
+    margin-bottom: 26px;
+  }
 
-    span[slot="unsupported"],
-    span[slot="not-allowed"] {
-      display: block;
-      background: rgba(255, 90, 90, 0.15);
-      border: 1px solid rgba(255, 90, 90, 0.4);
-      color: #ffb3b3;
-      padding: 14px;
-      border-radius: 10px;
-      font-size: 13px;
-    }
+  .panel-header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
 
-    .footer {
-      margin-top: 24px;
-      font-size: 12px;
-      color: #6b7684;
-    }
-  </style>
+  .panel-header p {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .field-group {
+    margin-bottom: 20px;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 10px;
+  }
+
+  .chip-selector {
+    display: flex;
+    gap: 8px;
+    background: var(--bg-card);
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+  }
+
+  .chip-option {
+    flex: 1;
+    padding: 11px 8px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: transparent;
+    border: none;
+    transition: all 0.18s ease;
+  }
+
+  .chip-option.active {
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    color: #0b1120;
+  }
+
+  .fw-select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .fw-select option {
+    background: var(--bg-card);
+    color: var(--text-main);
+  }
+
+  .fw-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .fw-meta span b {
+    color: var(--text-main);
+  }
+
+  esp-web-install-button { display: block; margin-top: 8px; }
+
+  button[slot="activate"] {
+    width: 100%;
+    padding: 15px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    color: #0b1120;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  button[slot="activate"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(0, 201, 255, 0.25);
+  }
+
+  span[slot="unsupported"],
+  span[slot="not-allowed"] {
+    display: block;
+    background: rgba(255, 90, 90, 0.1);
+    border: 1px solid rgba(255, 90, 90, 0.3);
+    color: #ffb3b3;
+    padding: 13px 14px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+
+  .footer-note {
+    margin-top: 22px;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  .footer-note a { color: var(--accent-1); text-decoration: none; }
+
+  @media (max-width: 820px) {
+    .layout { grid-template-columns: 1fr; max-width: 480px; }
+  }
+</style>
 </head>
 <body>
 
-  <div class="card">
-    <div class="chip-icon">🔌</div>
-    <h1>GÓC NGHỊCH ĐIỆN</h1>
-    <p class="subtitle">Chọn loại chip, chọn firmware rồi nạp trực tiếp qua trình duyệt</p>
+<div class="layout">
 
-    <div class="chip-selector">
-      <button class="chip-option active" data-chip="esp8266">ESP8266</button>
-      <button class="chip-option" data-chip="esp32s3">ESP32-S3</button>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div>
+        <div class="brand-name">ESP Flasher</div>
+        <div class="brand-sub">Web Serial Tool</div>
+      </div>
     </div>
 
-    <ul class="steps">
-      <li data-num="1">Cắm mạch vào máy tính qua cáp USB</li>
-      <li data-num="2">Dùng trình duyệt Chrome, Edge hoặc Cốc Cốc</li>
-      <li data-num="3">Chọn firmware, bấm nút, chọn đúng cổng COM</li>
+    <h2>Yêu cầu hệ thống</h2>
+    <ul class="req-list">
+      <li><span class="req-icon">1</span> Cắm mạch vào máy tính qua cáp USB</li>
+      <li><span class="req-icon">2</span> Sử dụng trình duyệt Chrome, Edge hoặc Cốc Cốc</li>
+      <li><span class="req-icon">3</span> Chọn đúng firmware và cổng COM tương ứng</li>
     </ul>
 
-    <label for="fw-select" class="fw-label">Chọn firmware:</label>
-    <select id="fw-select" class="fw-select"></select>
+    <div class="divider"></div>
+
+    <h2>Hỗ trợ chip</h2>
+    <ul class="req-list">
+      <li><span class="req-icon">✓</span> ESP8266 — LED, BLDC</li>
+      <li><span class="req-icon">✓</span> ESP32-S3 — USB / BLE Bridge</li>
+    </ul>
+
+    <div class="status-box">
+      <div class="status-row">
+        <span class="status-dot"></span>
+        Sẵn sàng kết nối thiết bị
+      </div>
+    </div>
+  </div>
+
+  <!-- Main panel -->
+  <div class="panel">
+    <div class="panel-header">
+      <h1>Nạp Firmware</h1>
+      <p>Chọn chip và firmware phù hợp, sau đó nạp trực tiếp qua trình duyệt</p>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Loại chip</label>
+      <div class="chip-selector">
+        <button class="chip-option active" data-chip="esp8266">ESP8266</button>
+        <button class="chip-option" data-chip="esp32s3">ESP32-S3</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="fw-select">Firmware</label>
+      <select id="fw-select" class="fw-select"></select>
+      <div class="fw-meta">
+        <span>Định dạng: <b>.bin</b></span>
+        <span>Kết nối: <b>Web Serial</b></span>
+      </div>
+    </div>
 
     <esp-web-install-button id="install-btn" manifest="manifest.json">
       <button slot="activate">⚡ Kết nối &amp; Nạp Firmware</button>
@@ -201,49 +349,51 @@
       <span slot="not-allowed">⚠️ Trang này cần chạy qua HTTPS để hoạt động.</span>
     </esp-web-install-button>
 
-    <p class="footer">esp8266-flasher · GitHub Pages</p>
+    <p class="footer-note">esp8266-flasher · GitHub Pages</p>
   </div>
 
-  <script>
-    const firmwareList = {
-      esp8266: [
-        { value: "manifest.json", label: "LED nhấp nháy (ESP8266)" },
-        { value: "manifest-v2.json", label: "Điều khiển BLDC (ESP8266)" }
-      ],
-esp32s3: [
-  { value: "manifest-esp32s3.json", label: "bàn phím BLUE" }
-]
-    };
+</div>
 
-    const chipButtons = document.querySelectorAll('.chip-option');
-    const fwSelect = document.getElementById('fw-select');
-    const installBtn = document.getElementById('install-btn');
+<script>
+  const firmwareList = {
+    esp8266: [
+      { value: "manifest.json", label: "LED nhấp nháy (ESP8266)" },
+      { value: "manifest-v2.json", label: "Điều khiển BLDC (ESP8266)" }
+    ],
+    esp32s3: [
+      { value: "manifest-esp32s3.json", label: "Bàn phím BLUE" }
+    ]
+  };
 
-    function renderFwOptions(chip) {
-      fwSelect.innerHTML = '';
-      firmwareList[chip].forEach(fw => {
-        const opt = document.createElement('option');
-        opt.value = fw.value;
-        opt.textContent = fw.label;
-        fwSelect.appendChild(opt);
-      });
-      installBtn.setAttribute('manifest', fwSelect.value);
-    }
+  const chipButtons = document.querySelectorAll('.chip-option');
+  const fwSelect = document.getElementById('fw-select');
+  const installBtn = document.getElementById('install-btn');
 
-    chipButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        chipButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderFwOptions(btn.dataset.chip);
-      });
+  function renderFwOptions(chip) {
+    fwSelect.innerHTML = '';
+    firmwareList[chip].forEach(fw => {
+      const opt = document.createElement('option');
+      opt.value = fw.value;
+      opt.textContent = fw.label;
+      fwSelect.appendChild(opt);
     });
+    installBtn.setAttribute('manifest', fwSelect.value);
+  }
 
-    fwSelect.addEventListener('change', () => {
-      installBtn.setAttribute('manifest', fwSelect.value);
+  chipButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      chipButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderFwOptions(btn.dataset.chip);
     });
+  });
 
-    renderFwOptions('esp8266');
-  </script>
+  fwSelect.addEventListener('change', () => {
+    installBtn.setAttribute('manifest', fwSelect.value);
+  });
+
+  renderFwOptions('esp8266');
+</script>
 
 </body>
 </html>
