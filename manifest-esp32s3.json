@@ -1,5 +1,5 @@
 {
-  "name": "ESP32-S3 USB to BLE Firmware",
+  "name": "Bàn phím BLUE",
   "version": "1.0.0",
   "new_install_prompt_erase": true,
   "builds": [
